@@ -11,7 +11,9 @@ public class DB {
     static final String PASS = "MohammadSaleh";
 
     public static void main(String[] args) throws SQLException {
-        select();
+//        insert();
+//        select();
+        create_table();
     }
 
     public static void create_table() throws SQLException{
@@ -43,9 +45,10 @@ public class DB {
                 connection.close();
         }
     }
-    public static void insert(String query) throws SQLException{
+    public static void insert(/*String query*/) throws SQLException{
         Connection connection = null;
         Statement statement = null;
+        PreparedStatement preparedStatement = null;
         try {
             // STEP 1: Register JDBC driver
             Class.forName(JDBC_DRIVER);
@@ -55,15 +58,28 @@ public class DB {
             connection = DriverManager.getConnection(URL, USER, PASS);
             System.out.println("Connected database successfully...");
             connection.setAutoCommit(false);
+
             // STEP 3: Execute a query
-            statement = connection.createStatement();
-            String sql = "INSERT INTO ACCOUNT VALUES (6, '1.3.3.4', 2000, 1)";
-            statement.executeUpdate(sql);
-            ////////////////
-            sql = "INSERT INTO ACCOUNT " + "VALUES (7, '5.3.2.1', 50, 2)";
-            statement.executeUpdate(sql);
+//            statement = connection.createStatement();
+//            String sql = "INSERT INTO ACCOUNT VALUES (6, '1.3.3.4', 2000, 1)";
+//            statement.executeUpdate(sql);
+//            ////////////////
+//            sql = "INSERT INTO ACCOUNT " + "VALUES (7, '5.3.2.1', 50, 2)";
+//            statement.executeUpdate(sql);
+//            System.out.println("Inserted records into the table...");
+//            ////////////////////////////
+
+            // STEP 3: Execute a query with preparedStatment
+            String query = "INSERT INTO account (id, account_number, amount, owner) VALUES (?,?,?,?)";
+
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, 8);
+            preparedStatement.setString(2, "3.3.1.4");
+            preparedStatement.setDouble(3, 200.0);
+            preparedStatement.setLong(4, 1);
+            preparedStatement.executeUpdate();
             System.out.println("Inserted records into the table...");
-            ////////////////////////////
+
             connection.commit();
         } catch (Exception e) {
             e.printStackTrace();
